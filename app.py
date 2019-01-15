@@ -2,6 +2,10 @@ import os
 import json
 import groupy
 
+from groupy import Bot, Group, attachments
+
+groupy.config.KEY_LOCATION="/.groupy.key"
+
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
@@ -38,12 +42,21 @@ mention["loci"] = loci
 
 bot.post(text, mention)
 
+def send_message(msg):
+	url = 'https://api.groupme.com/v3/bots/post'
+	
+	data ={
+		'bot_id': os.getenv('GROUPMET_BOT_ID')
+		'text': msg,
+	}
+	
+	request = Request(url, urlencode(data).encode())
+	json = urlopen(request).read().decode()
+
 def get_bot(groupID):
 	for b in Bot.list():
 		if b.group_id == groupID:
 	return b
-
-
 
 def log(msg):
 	print(str(msg))
